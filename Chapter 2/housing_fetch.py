@@ -13,9 +13,13 @@ def load_housing_data ():
             housing_tarball .extractall (path ="datasets" )
     return pd.read_csv (Path ("datasets/housing/housing.csv" ))
 housing = load_housing_data ()
-#housing.head()
-#housing.info ()
-#print(housing["ocean_proximity" ].value_counts())
-print(housing.describe())
-housing.hist (bins =50, figsize =(12, 8))
-plt.show ()
+
+
+print("Fetch imported")
+if __name__=="__main__":
+    #housing.head()
+    #housing.info ()
+    #print(housing["ocean_proximity" ].value_counts())
+    print(housing.describe())
+    housing.hist (bins =50, figsize =(12, 8))
+    plt.show ()
