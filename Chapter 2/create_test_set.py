@@ -11,8 +11,8 @@ def shuffle_and_split_data(data, test_ratio):
 #housing = hf.load_housing_data()
 
 train_set, test_set = shuffle_and_split_data(housing, 0.2)
-print(len(train_set))
-print(len(test_set))
+#print(len(train_set))
+#print(len(test_set))
 #
 # create data partition 
 from zlib import crc32
@@ -58,6 +58,33 @@ for train_index , test_index in splitter .split (housing , housing ["income_cat"
 # using the first split :
 strat_train_set , strat_test_set = strat_splits [0]
 
-# other way to get single stratified split qith 'stratify' argument:
+# other way to get single stratified split with 'stratify' argument:
 strat_train_set , strat_test_set = train_test_split ( housing , test_size =0.2 ,
                                                      stratify =housing ["income_cat" ], random_state =42)
+# check result 
+# print(strat_test_set ["income_cat" ].value_counts () / len(strat_test_set ))
+# drop income cat --> reverting data back to its original state
+for set_ in (strat_train_set , strat_test_set ):
+    set_ .drop ("income_cat" , axis =1, inplace =True )
+
+# copying full training set so one can revert to it afterwards
+# if the training set is very large, you may want to sample an exploration set,
+# to make manipulations easy and fast during the exploration phase
+housing = strat_train_set .copy ()
+
+# show plots if main script
+if __name__=="__main__":
+    
+    #create a scatterplot of all the districts to visualize the data
+    housing.plot (kind ="scatter" , x="longitude" , y="latitude" , grid =True )
+    #plt.show ()
+    
+    # Setting thealpha option to 0.2 : makes it  easier to visualize the places where there is a high density of data point
+    housing.plot (kind ="scatter" , x="longitude" , y="latitude" , grid =True , alpha =0.2)
+    
+    # predefined color map from blue to red (jet)
+    housing .plot (kind ="scatter" , x="longitude" , y="latitude" ,
+                grid =True , s=housing ["population" ] / 100, label ="population" ,
+                c="median_house_value" , cmap ="jet" , colorbar =True , legend =True ,
+                sharex =False , figsize =(10, 7))
+    plt.show ()
